@@ -29,12 +29,12 @@ defmodule Cube do
   def draw(vertices, connect) do
     Enum.map(connect, fn pair -> 
       [[x1, y1, _z1], [x2, y2, _z2]] = Enum.map(pair, fn i -> Enum.at(vertices, i) end)
-      [screenY1, screenY2] = Enum.map([y1, y2], fn y -> round(elem(:io.rows(), 1)/2 - y*0.6) end) # 0.6 = y scaling factor
-      [screenX1, screenX2] = Enum.map([x1, x2], fn x -> round(x + elem(:io.columns(), 1)/2) end)
+      [screenY1, screenY2] = Enum.map([y1, y2], fn y -> round(elem(:io.rows(), 1) / 2 - y * 0.6) end) # 0.6 = y scaling factor
+      [screenX1, screenX2] = Enum.map([x1, x2], fn x -> round(x + elem(:io.columns(), 1) / 2) end)
       d = round(:math.sqrt(:math.pow((screenX2 - screenX1), 2) + :math.pow((screenY2 - screenY1), 2)))
       for s <- 0..d do
-        t = if d == 0, do: 0, else: s/d
-        [x, y] = Enum.map([{screenX1, screenX2}, {screenY1, screenY2}], fn p -> round(elem(p, 0) + t*(elem(p, 1) - elem(p, 0))) end)
+        t = if d == 0, do: 0, else: s / d
+        [x, y] = Enum.map([{screenX1, screenX2}, {screenY1, screenY2}], fn p -> round(elem(p, 0) + t * (elem(p, 1) - elem(p, 0))) end)
         IO.ANSI.cursor(y, x) <> "█" |> IO.write()
       end
     end)
@@ -42,9 +42,9 @@ defmodule Cube do
     IO.ANSI.clear() |> IO.write()
   end
 
-  def calculateX(x, y, z, [sA, sB, sC | _], [cA, cB, cC | _]), do: y*sA*sB*cC - z*cA*sB*cC + y*cA*sC + z*sA*sC + x*cB*cC
-  def calculateY(x, y, z, [sA, sB, sC | _], [cA, cB, cC | _]), do: y*cA*cC + z*sA*cC - y*sA*sB*sC + z*cA*sB*sC - x*cB*sC
-  def calculateZ(x, y, z, [sA, sB, _sC | _], [cA, cB, _cC | _]), do: z*cA*cB - y*sA*cB + x*sB
+  def calculateX(x, y, z, [sA, sB, sC | _], [cA, cB, cC | _]), do: (y * sA * sB * cC) - (z * cA * sB * cC) + (y * cA * sC) + (z * sA * sC) + (x * cB * cC)
+  def calculateY(x, y, z, [sA, sB, sC | _], [cA, cB, cC | _]), do: (y * cA * cC) + (z * sA * cC) - (y * sA * sB * sC) + (z * cA * sB * sC) - (x * cB * sC)
+  def calculateZ(x, y, z, [sA, sB, _sC | _], [cA, cB, _cC | _]), do: (z * cA * cB) - (y * sA * cB) + (x * sB)
 end
 
 Cube.main()
